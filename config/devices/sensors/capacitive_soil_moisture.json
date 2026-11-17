@@ -1,0 +1,77 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "soil_moisture",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "capacitive_soil_moisture",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "Capacitive Soil Moisture",
+    "resourceRoles": [
+        "soil_moisture"
+    ],
+    "roles": {
+        "soil_moisture": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "Moisture (%)"
+            },
+            "defaultStrategy": "multi_point",
+            "description": "Measure soil water content using capacitive or resistive probes.",
+            "displayUnits": [
+                "%"
+            ],
+            "label": "Soil Moisture",
+            "source": "raw_value",
+            "standardUnit": "%"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "soil"
+}

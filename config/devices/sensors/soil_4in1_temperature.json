@@ -1,0 +1,99 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "MODBUS_RTU",
+            "params": {
+                "baud": 9600,
+                "funcCode": 3,
+                "len": 1,
+                "preDelay": 10,
+                "readLen": 1,
+                "reg": 1,
+                "slaveId": 1,
+                "timeout": 500,
+                "wait": 0
+            },
+            "responseProcessing": {
+                "divisor": 10,
+                "endian": "big",
+                "length": 2,
+                "offset": 0,
+                "type": "bytes"
+            },
+            "valuePath": "data[0]"
+        }
+    },
+    "defaultRole": "air_temp",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 200
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "MODBUS_RTU"
+        ],
+        "interface": "uart",
+        "pins": [
+            {
+                "name": "RX",
+                "type": "DIGITAL_IN"
+            },
+            {
+                "name": "TX",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "soil_4in1_temperature",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "type": "float",
+            "unit": "C"
+        }
+    },
+    "name": "Soil 4in1 - Temperature",
+    "parentTag": "soil_4in1",
+    "resourceRoles": [
+        "air_temp"
+    ],
+    "roles": {
+        "air_temp": {
+            "allowedStrategies": [
+                "none",
+                "offset",
+                "linear"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Temp",
+                "yLabel": "Corrected Temp"
+            },
+            "defaultStrategy": "offset",
+            "description": "Measure ambient air temperature.",
+            "displayUnits": [
+                "C",
+                "F"
+            ],
+            "label": "Air Temperature",
+            "source": "raw_value",
+            "standardUnit": "C"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "soil"
+}

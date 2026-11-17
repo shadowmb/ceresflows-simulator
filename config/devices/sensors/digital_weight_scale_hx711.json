@@ -1,0 +1,79 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "HX711_READ",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "weight_scale",
+    "defaults": {
+        "sampling": {
+            "count": 10,
+            "delayMs": 10
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "HX711_READ"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "DOUT",
+                "type": "DIGITAL_IN"
+            },
+            {
+                "name": "SCK",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "digital_weight_scale_hx711",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_weight": {
+            "type": "int",
+            "unit": "raw"
+        }
+    },
+    "name": " Digital Weight Scale HX711",
+    "resourceRoles": [
+        "weight_scale"
+    ],
+    "roles": {
+        "weight_scale": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw ADC",
+                "yLabel": "Weight"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measures weight using a load cell (e.g., HX711).",
+            "displayUnits": [
+                "g",
+                "kg",
+                "lb"
+            ],
+            "label": "Weight Scale (Load Cell)",
+            "source": "raw_weight",
+            "standardUnit": "g"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "other"
+}

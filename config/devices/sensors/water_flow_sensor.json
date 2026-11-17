@@ -1,0 +1,76 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "PULSE_COUNT",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "flow_rate",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 0
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "PULSE_COUNT"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            5,
+            9,
+            12,
+            24
+        ]
+    },
+    "id": "water_flow_sensor",
+    "isParentTemplate": false,
+    "measurements": {
+        "pulse_count": {
+            "type": "int",
+            "unit": "count"
+        }
+    },
+    "name": "Water Flow Sensor",
+    "resourceRoles": [
+        "flow_rate"
+    ],
+    "roles": {
+        "flow_rate": {
+            "allowedStrategies": [
+                "linear"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Frequency (Hz)",
+                "yLabel": "Flow (L/min)"
+            },
+            "defaultStrategy": "linear",
+            "description": "Monitor liquid flow rate using pulse-counting sensors.",
+            "displayUnits": [
+                "L/min",
+                "L/h",
+                "gpm"
+            ],
+            "label": "Flow Rate",
+            "source": "pulse_count",
+            "standardUnit": "L/min"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

@@ -1,0 +1,117 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "argMapping": {
+                "rx": "$PIN",
+                "tx": "$PIN2"
+            },
+            "hwCmd": "UART_TRANSFER",
+            "params": {
+                "baud": 9600,
+                "preDelay": 0,
+                "readLen": 12,
+                "timeout": 1500,
+                "wait": 0
+            },
+            "responseProcessing": {
+                "type": "a02yyuw_sliding",
+                "length": 12
+            },
+            "valuePath": "data"
+        }
+    },
+    "defaultRole": "distance",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 200
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "Waterproof ultrasonic distance sensor with UART output. Range: 3-450cm. IP67",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "UART_TRANSFER"
+        ],
+        "interface": "uart",
+        "pins": [
+            {
+                "name": "RX",
+                "type": "DIGITAL_IN"
+            },
+            {
+                "name": "TX",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "a02yyuw_ultrasonic",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 4500,
+                "min": 30
+            },
+            "type": "float",
+            "unit": "mm"
+        }
+    },
+    "name": "A02YYUW Ultrasonic",
+    "resourceRoles": [
+        "distance",
+        "volume"
+    ],
+    "roles": {
+        "distance": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Distance",
+                "yLabel": "Corrected Distance"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measure linear distance. Ideal for liquid level monitoring.",
+            "displayUnits": [
+                "mm",
+                "cm",
+                "m",
+                "in",
+                "ft"
+            ],
+            "label": "Distance Monitor",
+            "source": "raw_value",
+            "standardUnit": "mm"
+        },
+        "volume": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "defaultStrategy": "multi_point",
+            "description": "Calculate liquid volume based on distance measurement.",
+            "displayUnits": [
+                "L",
+                "gal",
+                "ml"
+            ],
+            "label": "Tank Volume",
+            "source": "raw_value",
+            "standardUnit": "ml"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

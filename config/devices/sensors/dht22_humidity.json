@@ -1,0 +1,75 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "DHT_READ",
+            "valuePath": "temp"
+        }
+    },
+    "defaultRole": "air_humidity",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 500
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "\tSpecifications\n\tSupply voltage: 5V\n\tOutput voltage: 0-3.3V\n\tTemperature range:-40-80℃ resolution0.1℃ error \u003c±0.5℃\n\tHumidity range:0-100%RH resolution0.1%RH error±2%RH\n\tsize: 38 x 20mm",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "DHT_READ"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "DATA",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            5
+        ]
+    },
+    "id": "dht22_humidity",
+    "isParentTemplate": false,
+    "measurements": {
+        "humidity": {
+            "type": "float",
+            "unit": "C"
+        },
+        "temperature": {
+            "type": "float",
+            "unit": "%RH"
+        }
+    },
+    "name": "DHT22 Humidity",
+    "parentTag": "dht22",
+    "resourceRoles": [
+        "air_humidity"
+    ],
+    "roles": {
+        "air_humidity": {
+            "allowedStrategies": [
+                "none",
+                "offset",
+                "linear"
+            ],
+            "defaultStrategy": "offset",
+            "description": "Measure relative humidity of the environment.",
+            "displayUnits": [
+                "%"
+            ],
+            "label": "Air Humidity",
+            "source": "humidity",
+            "standardUnit": "%"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "air"
+}

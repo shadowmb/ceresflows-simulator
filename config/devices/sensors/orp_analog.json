@@ -1,0 +1,77 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "orp",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "Analog Oxidation-Reduction Potential (ORP) meter with BNC probe. Range: -2000mV to 2000mV.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            5
+        ]
+    },
+    "id": "orp_analog",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "ORP Analog",
+    "resourceRoles": [
+        "orp"
+    ],
+    "roles": {
+        "orp": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "ORP (mV)"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measure Oxidation-Reduction Potential (ORP) for water quality.",
+            "displayUnits": [
+                "mV"
+            ],
+            "label": "ORP Meter",
+            "source": "raw_value",
+            "standardUnit": "mV"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

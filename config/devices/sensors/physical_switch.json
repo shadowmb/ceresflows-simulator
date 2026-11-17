@@ -1,0 +1,69 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "DIGITAL_READ",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "push_button",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 0
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "DIGITAL_READ"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "physical_switch",
+    "isParentTemplate": false,
+    "measurements": {
+        "state": {
+            "type": "int",
+            "unit": "boolean"
+        }
+    },
+    "name": "Physical Switch",
+    "resourceRoles": [
+        "push_button"
+    ],
+    "roles": {
+        "push_button": {
+            "allowedStrategies": [
+                "none"
+            ],
+            "defaultStrategy": "none",
+            "description": "Digital input for momentary or toggle actions.",
+            "displayUnits": [
+                "boolean",
+                "state"
+            ],
+            "label": "Push Button / Switch",
+            "source": "state",
+            "standardUnit": "boolean"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "other"
+}

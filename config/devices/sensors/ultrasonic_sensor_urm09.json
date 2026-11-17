@@ -1,0 +1,129 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "I2C_SEQUENCE",
+            "params": {
+                "addr": "0x11"
+            },
+            "steps": [
+                {
+                    "op": "write",
+                    "data": [8, 1]
+                },
+                {
+                    "op": "delay",
+                    "ms": 50
+                },
+                {
+                    "op": "write",
+                    "data": [3],
+                    "stop": false
+                },
+                {
+                    "op": "read",
+                    "len": 2
+                }
+            ],
+            "responseProcessing": {
+                "type": "bytes",
+                "offset": 0,
+                "length": 2,
+                "endian": "big",
+                "signed": false,
+                "divisor": 0.1
+            },
+            "valuePath": "data"
+        }
+    },
+    "defaultRole": "distance",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "URM09 Ultrasonic Distance Sensor with I2C interface. Range: 2-500cm.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "I2C_SEQUENCE"
+        ],
+        "interface": "i2c",
+        "pins": [],
+        "supportsActuatorAssociation": false,
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "ultrasonic_sensor_urm09",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 5000,
+                "min": 20
+            },
+            "type": "int",
+            "unit": "mm"
+        }
+    },
+    "name": "Ultrasonic Sensor URM09",
+    "resourceRoles": [
+        "distance",
+        "volume"
+    ],
+    "roles": {
+        "distance": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Distance",
+                "yLabel": "Corrected Distance"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measure linear distance. Ideal for liquid level monitoring.",
+            "displayUnits": [
+                "mm",
+                "cm",
+                "m",
+                "in",
+                "ft"
+            ],
+            "label": "Distance Monitor",
+            "source": "raw_value",
+            "standardUnit": "mm"
+        },
+        "volume": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Distance",
+                "yLabel": "Volume"
+            },
+            "defaultStrategy": "multi_point",
+            "description": "Calculate liquid volume based on distance measurement.",
+            "displayUnits": [
+                "L",
+                "gal",
+                "ml"
+            ],
+            "label": "Tank Volume",
+            "source": "raw_value",
+            "standardUnit": "ml"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

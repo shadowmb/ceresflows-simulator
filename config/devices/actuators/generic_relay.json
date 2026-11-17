@@ -1,0 +1,30 @@
+{
+    "id": "actuator_generic",
+    "name": "Generic Relay / Actuator",
+    "category": "ACTUATOR",
+    "description": "Standard Digital Output (On/Off)",
+    "hardware": {
+        "interface": "GPIO",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "DIGITAL_OUT"
+            }
+        ]
+    },
+    "measurements": {
+        "state": {
+            "unit": "boolean",
+            "limits": {
+                "min": 0,
+                "max": 1
+            }
+        }
+    },
+    "commands": {
+        "TOGGLE": {
+            "hwCmd": "DIGITAL_WRITE",
+            "valuePath": "state"
+        }
+    }
+}

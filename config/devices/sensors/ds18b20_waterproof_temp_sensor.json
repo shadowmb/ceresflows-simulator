@@ -1,0 +1,78 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ONEWIRE_READ_TEMP",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "water_temp",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 750
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "The DS18B20 provides 9 to 12-bit (configurable) temperature readings over a 1-Wire interface, so that only one wire (and ground) needs to be connected from a central microprocessor.Usable with 3.0-5.5V systems.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ONEWIRE_READ_TEMP"
+        ],
+        "interface": "onewire",
+        "pins": [
+            {
+                "name": "DATA",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "ds18b20_waterproof_temp_sensor",
+    "isParentTemplate": false,
+    "measurements": {
+        "temperature": {
+            "limits": {
+                "max": 125,
+                "min": -55
+            },
+            "type": "float",
+            "unit": "C"
+        }
+    },
+    "name": "DS18B20 Waterproof Temp Sensor",
+    "resourceRoles": [
+        "water_temp"
+    ],
+    "roles": {
+        "water_temp": {
+            "allowedStrategies": [
+                "none",
+                "offset"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Temp",
+                "yLabel": "Corrected Temp"
+            },
+            "defaultStrategy": "offset",
+            "description": "Monitor reservoir / nutrient solution temperature.",
+            "displayUnits": [
+                "C",
+                "F"
+            ],
+            "label": "Water Temperature",
+            "source": "temperature",
+            "standardUnit": "C"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

@@ -1,0 +1,97 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "MODBUS_RTU",
+            "params": {
+                "baud": 9600,
+                "funcCode": 3,
+                "len": 1,
+                "preDelay": 10,
+                "readLen": 1,
+                "reg": 0,
+                "slaveId": 1,
+                "timeout": 500,
+                "wait": 0
+            },
+            "responseProcessing": {
+                "divisor": 10,
+                "endian": "big",
+                "length": 2,
+                "offset": 0,
+                "type": "bytes"
+            },
+            "valuePath": "data[0]"
+        }
+    },
+    "defaultRole": "soil_moisture",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 200
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "MODBUS_RTU"
+        ],
+        "interface": "uart",
+        "pins": [
+            {
+                "name": "RX",
+                "type": "DIGITAL_IN"
+            },
+            {
+                "name": "TX",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "soil_4in1_moisture",
+    "isParentTemplate": true,
+    "measurements": {
+        "raw_value": {
+            "type": "float",
+            "unit": "%RH"
+        }
+    },
+    "name": "Soil 4in1 - Moisture ",
+    "parentTag": "soil_4in1",
+    "resourceRoles": [
+        "soil_moisture"
+    ],
+    "roles": {
+        "soil_moisture": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "Moisture (%)"
+            },
+            "defaultStrategy": "multi_point",
+            "description": "Measure soil water content using capacitive or resistive probes.",
+            "displayUnits": [
+                "%"
+            ],
+            "label": "Soil Moisture",
+            "source": "raw_value",
+            "standardUnit": "%"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "soil"
+}

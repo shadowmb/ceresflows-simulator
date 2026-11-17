@@ -1,0 +1,87 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "DHT_READ",
+            "valuePath": "temp"
+        }
+    },
+    "defaultRole": "air_temp",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 500
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "Specifications\nSupply voltage: 5V\nOutput voltage: 0-3.3V\nTemperature range:-40-80℃ resolution0.1℃ error \u003c±0.5℃\nHumidity range:0-100%RH resolution0.1%RH error±2%RH\nsize: 38 x 20mm",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "DHT_READ"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "DATA",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            5
+        ]
+    },
+    "id": "dht22_temp",
+    "isParentTemplate": true,
+    "measurements": {
+        "humidity": {
+            "limits": {
+                "max": 80,
+                "min": -40
+            },
+            "type": "float",
+            "unit": "C"
+        },
+        "temperature": {
+            "limits": {
+                "max": 80,
+                "min": -40
+            },
+            "type": "float",
+            "unit": "C"
+        }
+    },
+    "name": "DHT22 Temp",
+    "parentTag": "dht22",
+    "resourceRoles": [
+        "air_temp"
+    ],
+    "roles": {
+        "air_temp": {
+            "allowedStrategies": [
+                "none",
+                "offset",
+                "linear"
+            ],
+            "calibrationLabels": {
+                "xLabel": "Raw Temp",
+                "yLabel": "Corrected Temp"
+            },
+            "defaultStrategy": "offset",
+            "description": "Measure ambient air temperature.",
+            "displayUnits": [
+                "C",
+                "F"
+            ],
+            "label": "Air Temperature",
+            "source": "temperature",
+            "standardUnit": "C"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "air"
+}

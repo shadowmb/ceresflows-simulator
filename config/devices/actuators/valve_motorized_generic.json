@@ -1,0 +1,122 @@
+{
+    "id": "valve_motorized_generic",
+    "driverId": "UNIVERSAL_DRIVER",
+    "name": "Motorized Ball Valve (Generic)",
+    "description": "Motorized valve with separate Open/Close relays. Uses 2 Digital Pins.",
+    "category": "ACTUATOR",
+    "defaultRole": "positioning",
+    "schemaVersion": 2,
+    "system": "water",
+    "tags": [
+        "valve",
+        "motor",
+        "water"
+    ],
+    "hardware": {
+        "interface": "digital",
+        "voltage": [
+            12.0,
+            24.0
+        ],
+        "pins": [
+            {
+                "name": "Open Relay",
+                "type": "DIGITAL_OUT"
+            },
+            {
+                "name": "Close Relay",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "capabilities": [
+            "DIGITAL_WRITE"
+        ]
+    },
+    "measurements": {
+        "position": {
+            "unit": "%",
+            "type": "int"
+        }
+    },
+    "roles": {
+        "positioning": {
+            "label": "Valve Positioning",
+            "description": "Control opening % via timing.",
+            "source": "position",
+            "strategies": [
+                "duration_position"
+            ],
+            "displayUnits": [
+                "%"
+            ],
+            "standardUnit": "%"
+        },
+        "dosing": {
+            "label": "Flow Dosing",
+            "description": "Dose volume based on flow rate.",
+            "source": "position",
+            "strategies": [
+                "volumetric_flow"
+            ],
+            "displayUnits": [
+                "ml",
+                "L"
+            ],
+            "standardUnit": "ml"
+        }
+    },
+    "resourceRoles": [
+        "water_in",
+        "water_out",
+        "drain",
+        "nutrient"
+    ],
+    "commands": {
+        "OPEN": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": 1
+            },
+            "argMapping": [
+                "$PIN",
+                "state"
+            ]
+        },
+        "CLOSE": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": 1
+            },
+            "argMapping": [
+                "$PIN2",
+                "state"
+            ]
+        },
+        "STOP": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": 0
+            },
+            "argMapping": [
+                "$PIN",
+                "state"
+            ],
+            "description": "Stop movement (Set both LOW - Sequence requires backend orchestration or multiple commands)"
+        }
+    },
+    "defaults": {
+        "initialState": {
+            "position": 0
+        },
+        "validation": {
+            "retryCount": 0
+        }
+    },
+    "ui": {
+        "icon": "settings",
+        "wizardGroup": "Actuators",
+        "tags": [
+            "Valve"
+        ]
+    }
+}

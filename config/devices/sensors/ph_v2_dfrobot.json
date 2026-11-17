@@ -1,0 +1,83 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "ph",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "DFRobot’s Gravity: Analog pH meter V2 is specifically designed to measure the pH of a solution and reflect it’s acidity or alkalinity. ",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "compensationConfig": {
+            "coeff": 0.003
+        },
+        "compensationType": "linear_ph",
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": true,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "ph_v2_dfrobot",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "pH V2 DFRobot",
+    "resourceRoles": [
+        "ph"
+    ],
+    "roles": {
+        "ph": {
+            "allowedStrategies": [
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "pH Value"
+            },
+            "defaultStrategy": "multi_point",
+            "description": "Measure acidity (0-14 pH). For analog pH probes.",
+            "displayUnits": [
+                "pH"
+            ],
+            "label": "pH Meter",
+            "source": "raw_value",
+            "standardUnit": "pH",
+            "ui": {
+                "wizard": "PhSmartWizard"
+            }
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

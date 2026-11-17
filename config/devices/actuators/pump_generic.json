@@ -1,0 +1,183 @@
+{
+    "id": "pump_generic",
+    "driverId": "UNIVERSAL_DRIVER",
+    "name": "Generic Pump",
+    "description": "Versatile water pump template with support for Relay (ON/OFF) and PWM (Speed Control) variants.",
+    "category": "ACTUATOR",
+    "defaultRole": "manual",
+    "schemaVersion": 2,
+    "system": "water",
+    "tags": [
+        "pump",
+        "dosing",
+        "irrigation"
+    ],
+    "hardware": {
+        "interface": "digital",
+        "voltage": [
+            3.3,
+            5.0,
+            12.0
+        ],
+        "pins": [
+            {
+                "name": "Control",
+                "type": "DIGITAL_OUT"
+            }
+        ],
+        "capabilities": [
+            "DIGITAL_WRITE"
+        ]
+    },
+    "commands": {
+        "SET": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": "number"
+            },
+            "argMapping": [
+                "$PIN",
+                "state"
+            ]
+        },
+        "ON": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": 1
+            },
+            "description": "Turn pump ON",
+            "argMapping": [
+                "$PIN",
+                "state"
+            ]
+        },
+        "OFF": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": 0
+            },
+            "description": "Turn pump OFF",
+            "argMapping": [
+                "$PIN",
+                "state"
+            ]
+        },
+        "READ": {
+            "hwCmd": "DIGITAL_READ",
+            "valuePath": "state",
+            "description": "Read current state",
+            "argMapping": [
+                "$PIN"
+            ]
+        },
+        "RELAY_SET": {
+            "hwCmd": "DIGITAL_WRITE",
+            "params": {
+                "state": "number"
+            },
+            "description": "Legacy alias for SET (UI Compatibility)",
+            "argMapping": [
+                "$PIN",
+                "state"
+            ]
+        }
+    },
+    "variants": [
+        {
+            "id": "relay",
+            "label": "Relay Control (ON/OFF)",
+            "description": "Simple ON/OFF control via Relay Module",
+            "hardware": {
+                "interface": "digital",
+                "capabilities": [
+                    "DIGITAL_WRITE"
+                ]
+            }
+        },
+        {
+            "id": "pwm",
+            "label": "PWM Speed Control",
+            "description": "Variable speed control via PWM Driver or MOSFET",
+            "hardware": {
+                "interface": "pwm",
+                "capabilities": [
+                    "PWM_WRITE"
+                ]
+            },
+            "commands": {
+                "SET_SPEED": {
+                    "hwCmd": "PWM_WRITE",
+                    "params": {
+                        "duty": "number"
+                    }
+                }
+            }
+        }
+    ],
+    "roles": {
+        "manual": {
+            "label": "Manual Switch",
+            "description": "Simple ON/OFF control.",
+            "strategies": [],
+            "standardUnit": "sec",
+            "displayUnits": [
+                "boolean"
+            ]
+        },
+        "dosing": {
+            "label": "Dosing Pump",
+            "description": "Dose specific volume of liquid based on flow rate calibration.",
+            "strategies": [
+                "volumetric_flow"
+            ],
+            "displayUnits": [
+                "ml",
+                "L",
+                "gal"
+            ],
+            "standardUnit": "ml",
+            "ui": {
+                "wizard": "volumetric_flow",
+                "wizardOptions": {
+                    "testDurationDefault": 10,
+                    "targetUnit": "ml"
+                }
+            }
+        },
+        "speed": {
+            "label": "Variable Speed",
+            "description": "Control pump speed via PWM mapping.",
+            "strategies": [
+                "pwm_mapping"
+            ],
+            "displayUnits": [
+                "%"
+            ],
+            "standardUnit": "%"
+        }
+    },
+    "resourceRoles": [
+        "ph_up",
+        "ph_down",
+        "nutrient_a",
+        "nutrient_b",
+        "water",
+        "mixer",
+        "irrigation",
+        "none"
+    ],
+    "defaults": {
+        "initialState": {
+            "state": 0,
+            "speed": 0
+        }
+    },
+    "ui": {
+        "icon": "droplet",
+        "tags": [
+            "Pump",
+            "Water"
+        ],
+        "wizardGroup": "Water Systems"
+    }
+}

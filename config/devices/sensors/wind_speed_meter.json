@@ -1,0 +1,81 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "anemometer",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "Measures wind speed from 0 to 30 m/s. Outputs 0-5V analog signal proportional to the wind speed.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            12,
+            24,
+            9,
+            5
+        ]
+    },
+    "id": "wind_speed_meter",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "Wind Speed Meter",
+    "resourceRoles": [
+        "anemometer"
+    ],
+    "roles": {
+        "anemometer": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "Speed (m/s)"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measures wind speed (velocity).",
+            "displayUnits": [
+                "m/s",
+                "km/h",
+                "mph"
+            ],
+            "label": "Wind Speed Sensor",
+            "source": "raw_value",
+            "standardUnit": "m/s"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "air"
+}

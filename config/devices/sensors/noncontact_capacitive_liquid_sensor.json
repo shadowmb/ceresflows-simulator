@@ -1,0 +1,70 @@
+{
+    "_isCustom": true,
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "DIGITAL_READ",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "liquid_level_switch",
+    "defaults": {
+        "sampling": {
+            "count": 1,
+            "delayMs": 0
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": " Detects liquid level through non-metallic walls. Returns Boolean states (Wet/Dry)",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "DIGITAL_READ"
+        ],
+        "interface": "digital",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "DIGITAL_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            5,
+            12
+        ]
+    },
+    "id": "noncontact_capacitive_liquid_sensor",
+    "isParentTemplate": false,
+    "measurements": {
+        "state": {
+            "type": "int",
+            "unit": "bit"
+        }
+    },
+    "name": "NonContact Capacitive Liquid Sensor",
+    "resourceRoles": [
+        "liquid_level_switch"
+    ],
+    "roles": {
+        "liquid_level_switch": {
+            "allowedStrategies": [
+                "none"
+            ],
+            "defaultStrategy": "none",
+            "description": "Digital sensor detecting presence or absence of liquid.",
+            "displayUnits": [
+                "boolean",
+                "state"
+            ],
+            "label": "Liquid Level Switch",
+            "source": "state",
+            "standardUnit": "boolean"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}

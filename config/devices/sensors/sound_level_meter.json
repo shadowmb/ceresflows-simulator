@@ -1,0 +1,78 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "sound_level",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "Measures environmental noise from 30dBA to 130dBA. Outputs analog voltage proportional to noise level.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": false,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "sound_level_meter",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "Sound Level Meter",
+    "resourceRoles": [
+        "sound_level"
+    ],
+    "roles": {
+        "sound_level": {
+            "allowedStrategies": [
+                "linear",
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "Noise (dBA)"
+            },
+            "defaultStrategy": "linear",
+            "description": "Measures environmental noise in decibels.",
+            "displayUnits": [
+                "dBA",
+                "dB"
+            ],
+            "label": "Sound Level Meter",
+            "source": "raw_value",
+            "standardUnit": "dBA"
+        }
+    },
+    "schemaVersion": 2,
+    "system": "other"
+}

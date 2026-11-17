@@ -1,0 +1,86 @@
+{
+    "category": "SENSOR",
+    "commands": {
+        "READ": {
+            "hwCmd": "ANALOG",
+            "valuePath": "value"
+        }
+    },
+    "defaultRole": "ec",
+    "defaults": {
+        "sampling": {
+            "count": 5,
+            "delayMs": 50
+        },
+        "validation": {
+            "fallbackAction": "error",
+            "retryCount": 3
+        }
+    },
+    "description": "DFRobot Gravity: analog electrical conductivity meter V2 is specially used to measure the electrical conductivity of aqueous solutions, and then to evaluate the water quality.",
+    "driverId": "UNIVERSAL_DRIVER",
+    "hardware": {
+        "capabilities": [
+            "ANALOG"
+        ],
+        "compensationConfig": {
+            "coeff": 0.02
+        },
+        "compensationType": "linear_ec",
+        "interface": "analog",
+        "pins": [
+            {
+                "name": "Signal",
+                "type": "ANALOG_IN"
+            }
+        ],
+        "supportsTemperatureCompensation": true,
+        "voltage": [
+            3.3,
+            5
+        ]
+    },
+    "id": "ec_v2_dfrobot",
+    "isParentTemplate": false,
+    "measurements": {
+        "raw_value": {
+            "limits": {
+                "max": 1023,
+                "min": 0
+            },
+            "type": "int",
+            "unit": "adc"
+        }
+    },
+    "name": "EC V2 DFRobot",
+    "resourceRoles": [
+        "ec"
+    ],
+    "roles": {
+        "ec": {
+            "allowedStrategies": [
+                "multi_point"
+            ],
+            "calibrationLabels": {
+                "xLabel": "ADC Value",
+                "yLabel": "EC (uS/cm)"
+            },
+            "defaultStrategy": "multi_point",
+            "description": "Measure Nutrient Strength (EC). Suitable for analog conductivity probes.",
+            "displayUnits": [
+                "uS/cm",
+                "mS/cm",
+                "ppm",
+                "mg/L"
+            ],
+            "label": "EC Meter",
+            "source": "raw_value",
+            "standardUnit": "uS/cm",
+            "ui": {
+                "wizard": "EcSmartWizard"
+            }
+        }
+    },
+    "schemaVersion": 2,
+    "system": "water"
+}
