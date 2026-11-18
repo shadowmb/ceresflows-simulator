@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Plus, Play, Square, Save, RotateCcw } from 'lucide-react';
+import { Trash2, Plus, Play, Square, Save } from 'lucide-react';
 import { ApiClient } from '@/lib/api';
 import { PinAssignment } from '@/types';
 
@@ -40,7 +40,6 @@ interface ScenarioStudioProps {
 
 export function ScenarioStudio({ assignments }: ScenarioStudioProps) {
     const [scenarios, setScenarios] = useState<Scenario[]>([]);
-    const [activeScenario, setActiveScenario] = useState<Scenario | null>(null);
     const [status, setStatus] = useState<{ running: boolean; scenarioId?: string; elapsed: number }>({ running: false, elapsed: 0 });
 
     // Editor State

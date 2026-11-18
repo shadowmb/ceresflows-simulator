@@ -2,7 +2,6 @@ import { PinDefinition, PinAssignment } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 // import { Plus, X } from 'lucide-react'; // Unused in this version? Wait, we used Badge instead.
-import { Badge } from '@/components/ui/badge';
 
 interface PinGridProps {
     pins: PinDefinition[];

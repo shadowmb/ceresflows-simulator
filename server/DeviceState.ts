@@ -26,6 +26,7 @@ export class DeviceState {
     private blockedCommands: Set<string> = new Set();
     private invalidResponseCommands: Set<string> = new Set();
     private isOffline: boolean = false;
+    private responseDelayMs: number = 0;
 
     constructor() {
         // Initialize default sensors with realistic values
@@ -131,10 +132,20 @@ export class DeviceState {
         return this.isOffline;
     }
 
+    /** Delay of every command answer (UDP and MQTT), in milliseconds. The command itself runs on arrival. */
+    setResponseDelayMs(ms: number): void {
+        this.responseDelayMs = ms;
+    }
+
+    getResponseDelayMs(): number {
+        return this.responseDelayMs;
+    }
+
     clearAllErrors(): void {
         this.blockedCommands.clear();
         this.invalidResponseCommands.clear();
         this.isOffline = false;
+        this.responseDelayMs = 0;
     }
 
     // ============ Analog Pin Simulation ============

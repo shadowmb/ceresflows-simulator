@@ -16,6 +16,7 @@ import { fileURLToPath } from 'url';
 import { DeviceState } from './DeviceState.js';
 import { ProtocolHandler } from './ProtocolHandler.js';
 import { MqttHandler } from './MqttHandler.js';
+import { AnswerQueue } from './AnswerQueue.js';
 import { ScenarioEngine } from './ScenarioEngine.js';
 import { ControllerRegistry } from './ControllerRegistry.js';
 import { SensorRegistry } from './SensorRegistry.js';
@@ -69,7 +70,7 @@ const protocolHandler = new ProtocolHandler(
     }
 );
 
-const mqttHandler = new MqttHandler(protocolHandler, controllerConfig.mac);
+const mqttHandler = new MqttHandler(protocolHandler, controllerConfig.mac, () => deviceState.getResponseDelayMs());
 mqttHandler.setLogCallback(broadcastToSSE);
 
 const scenarioEngine = new ScenarioEngine(pinManager, deviceState);
@@ -83,6 +84,7 @@ const sseClients: Set<any> = new Set();
 // ============ UDP Server ============
 
 let udpServer: dgram.Socket | null = null;
+const udpAnswers = new AnswerQueue(() => deviceState.getResponseDelayMs());
 
 // Helper to broadcast to all SSE clients
 function broadcastToSSE(data: any) {
@@ -100,6 +102,9 @@ function startUdpServer(port: number): Promise<void> {
     return new Promise((resolve, reject) => {
         const socket = dgram.createSocket('udp4');
         let bound = false;
+
+        // Every close path (reconfigure, error) reaches here; Node emits 'close' on the next tick, before any timer
+        socket.on('close', () => udpAnswers.dropAll());
 
         const errorHandler = (err: any) => {
             if (!bound) {
@@ -129,16 +134,19 @@ function startUdpServer(port: number): Promise<void> {
 
             if (response !== null) {
                 const responseStr = typeof response === 'string' ? response : JSON.stringify(response);
-                console.log(`[UDP] → ${responseStr}`);
 
-                broadcastToSSE({
-                    type: 'outgoing',
-                    response: responseStr,
-                    timestamp
-                });
+                udpAnswers.schedule(() => {
+                    console.log(`[UDP] → ${responseStr}`);
 
-                socket.send(responseStr, rinfo.port, rinfo.address, (err) => {
-                    if (err) console.error('[UDP] Send error:', err);
+                    broadcastToSSE({
+                        type: 'outgoing',
+                        response: responseStr,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    socket.send(responseStr, rinfo.port, rinfo.address, (err) => {
+                        if (err) console.error('[UDP] Send error:', err);
+                    });
                 });
             }
         });
@@ -398,8 +406,49 @@ app.get('/api/state', (req, res) => {
         controller: activeController,
         assignments: pinManager.getAllAssignments(),
         uptime: deviceState.getUptime(),
-        isOffline: deviceState.getIsOffline()
+        isOffline: deviceState.getIsOffline(),
+        responseDelaySec: deviceState.getResponseDelayMs() / 1000
     });
+});
+
+// ---------- Faults API ----------
+
+function faultsView() {
+    return {
+        offline: deviceState.getIsOffline(),
+        responseDelaySec: deviceState.getResponseDelayMs() / 1000
+    };
+}
+
+app.get('/api/faults', (req, res) => {
+    res.json(faultsView());
+});
+
+app.post('/api/faults', (req, res) => {
+    const { offline, responseDelaySec } = req.body;
+
+    if (offline === undefined && responseDelaySec === undefined) {
+        return res.status(400).json({ success: false, error: 'Set offline and/or responseDelaySec' });
+    }
+    if (offline !== undefined && typeof offline !== 'boolean') {
+        return res.status(400).json({ success: false, error: 'offline must be true or false' });
+    }
+    if (responseDelaySec !== undefined &&
+        (typeof responseDelaySec !== 'number' || !Number.isFinite(responseDelaySec) || responseDelaySec < 0 || responseDelaySec > 120)) {
+        return res.status(400).json({ success: false, error: 'responseDelaySec must be a number from 0 to 120' });
+    }
+
+    if (responseDelaySec !== undefined) deviceState.setResponseDelayMs(responseDelaySec * 1000);
+    if (offline !== undefined) {
+        deviceState.setOffline(offline);
+        if (offline) {
+            // An offline controller answers nothing: answers still waiting are dropped
+            udpAnswers.dropAll();
+            mqttHandler.dropPendingAnswers();
+        }
+    }
+
+    res.json(faultsView());
 });
 
 // ---------- Scenario API ----------

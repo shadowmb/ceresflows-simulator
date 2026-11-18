@@ -1,5 +1,6 @@
 import mqtt from 'mqtt';
 import { ProtocolHandler } from './ProtocolHandler.js';
+import { AnswerQueue } from './AnswerQueue.js';
 
 export class MqttHandler {
     private client: mqtt.MqttClient | null = null;
@@ -7,10 +8,12 @@ export class MqttHandler {
     private mac: string;
     private clientId: string;
     private topicPrefix: string = 'hydro';
+    private answers: AnswerQueue;
 
-    constructor(protocolHandler: ProtocolHandler, mac: string, mqttTopicId?: string) {
+    constructor(protocolHandler: ProtocolHandler, mac: string, getResponseDelayMs: () => number, mqttTopicId?: string) {
         this.protocolHandler = protocolHandler;
         this.mac = mac;
+        this.answers = new AnswerQueue(getResponseDelayMs);
         // Priority: Custom ID > Alphanumeric mac for topic (SIM:01 -> SIM01)
         this.clientId = mqttTopicId || mac.replace(/[^a-zA-Z0-9]/g, '');
         console.log(`[MQTT] Init for ${this.clientId}`);
@@ -21,6 +24,7 @@ export class MqttHandler {
             this.clientId = mqttTopicId;
         }
 
+        this.answers.dropAll();
         if (this.client) {
             this.client.end();
         }
@@ -68,7 +72,13 @@ export class MqttHandler {
         });
     }
 
+    /** Pending answers die with the connection that was to receive them (also used when Offline is switched on). */
+    public dropPendingAnswers(): void {
+        this.answers.dropAll();
+    }
+
     public disconnect(): void {
+        this.answers.dropAll();
         if (this.client) {
             this.publishStatus('offline');
             this.client.end();
@@ -126,16 +136,18 @@ export class MqttHandler {
             const responseStr = typeof response === 'string' ? response : JSON.stringify(response);
             const resTopic = `${this.topicPrefix}/${this.clientId}/res`;
 
-            console.log(`[MQTT] Sending response to ${resTopic}`);
-            this.client?.publish(resTopic, responseStr, { qos: 0 });
+            this.answers.schedule(() => {
+                console.log(`[MQTT] Sending response to ${resTopic}`);
+                this.client?.publish(resTopic, responseStr, { qos: 0 });
 
-            if (this.onLog) {
-                this.onLog({
-                    type: 'outgoing',
-                    response: responseStr,
-                    timestamp: new Date().toISOString()
-                });
-            }
+                if (this.onLog) {
+                    this.onLog({
+                        type: 'outgoing',
+                        response: responseStr,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            });
         }
     }
 }

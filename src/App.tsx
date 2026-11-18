@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ControllerInfo, PinAssignment, PinDefinition, SimulatorState } from './types';
+import { ControllerInfo, PinAssignment } from './types';
 import { ApiClient } from './lib/api';
 import { useUdpLog } from './hooks/useUdpLog';
 import { ControllerCard } from './components/ControllerCard';
@@ -10,14 +10,16 @@ import { ProfileSelector } from './components/ProfileSelector';
 import { ScenarioStudio } from './components/ScenarioStudio';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
-import { Activity, Terminal, LayoutDashboard, PlayCircle } from 'lucide-react';
+import { Terminal, LayoutDashboard, PlayCircle } from 'lucide-react';
 
 import { ControllerSettingsModal } from './components/ControllerSettingsModal';
+import { FaultsCard, FaultsState } from './components/FaultsCard';
 
 function App() {
   const [controller, setController] = useState<ControllerInfo | null>(null);
   const [assignments, setAssignments] = useState<PinAssignment[]>([]);
   const [status, setStatus] = useState<any>({ configured: false });
+  const [faults, setFaults] = useState<FaultsState | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -30,6 +32,7 @@ function App() {
     try {
       const statusData = await ApiClient.get<any>('/api/status');
       setStatus(statusData);
+      setFaults(await ApiClient.get<FaultsState>('/api/faults'));
 
       if (statusData.configured) {
         const [ctrlData, assignData] = await Promise.all([
@@ -121,6 +124,8 @@ function App() {
                 onExit={handleExit}
                 onEdit={() => setShowEditModal(true)}
               />
+
+              {faults && <FaultsCard faults={faults} onChange={setFaults} />}
 
               {controller && (
                 <div className="space-y-2">
